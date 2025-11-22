@@ -1,10 +1,375 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>VoidOS Showcase</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VoidOS Docs</title>
+  <meta name="description" content="VoidOS — design & development documentation" />
+  <style>
+    :root{
+      --bg:#0A1123; /* dark blue casing feel */
+      --panel:#071027;
+      --muted:#9aa6c7;
+      --accent:#6DA8FF;
+      --glass: rgba(255,255,255,0.04);
+      --card:#081225;
+      --surface:#0b1630;
+      --white: #EAF0FF;
+      --radius:14px;
+      --maxwidth:1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:var(--white);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background: linear-gradient(180deg, var(--bg) 0%, #071023 100%);
+      display:flex;
+      color:var(--white);
+      font-size:15px;
+      line-height:1.5;
+    }
+    .wrap{max-width:var(--maxwidth);margin:28px auto;padding:28px;border-radius:18px;background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow: 0 10px 40px rgba(2,8,23,0.7);overflow:hidden;}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+    .logo{
+      width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#457ee6);display:flex;align-items:center;justify-content:center;font-weight:700;color:#052036;box-shadow:0 6px 18px rgba(109,168,255,0.12);
+    }
+    h1{margin:0;font-size:20px;letter-spacing:0.2px}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:22px}
+    nav{background:var(--panel);border-radius:12px;padding:14px;height:calc(100vh - 120px);overflow:auto;box-shadow: inset 0 1px 0 rgba(255,255,255,0.02)}
+    nav input[type="search"]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--white);outline:none;margin-bottom:10px}
+    nav a{display:block;padding:10px 12px;border-radius:8px;color:var(--muted);text-decoration:none;margin-bottom:6px}
+    nav a.active, nav a:hover{background:linear-gradient(90deg, rgba(109,168,255,0.06), rgba(109,168,255,0.03));color:var(--white);box-shadow: inset 0 1px 0 rgba(255,255,255,0.02)}
+    main{background:transparent;padding:18px;border-radius:12px;min-height:60vh}
+    .card{background:var(--card);padding:18px;border-radius:12px;margin-bottom:16px;box-shadow: 0 6px 24px rgba(2,8,23,0.4)}
+    .muted{color:var(--muted);font-size:13px}
+    h2{margin:0 0 10px 0;font-size:18px}
+    pre{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;overflow:auto;font-family:var(--mono);font-size:13px}
+    code{background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:6px;color:var(--accent)}
+    .flex{display:flex;gap:12px;align-items:center}
+    .kbd{font-family:var(--mono);background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:8px;font-size:13px}
+    .section{padding-bottom:12px}
+    .small{font-size:13px;color:var(--muted)}
+    .pill{background:var(--glass);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:13px}
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+    @media (max-width:900px){
+      .layout{grid-template-columns:1fr;gap:12px}
+      nav{height:auto;display:flex;overflow:auto;padding:8px}
+      nav a{white-space:nowrap;display:inline-block;margin-right:8px}
+    }
+    /* content specific */
+    .spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .note{background:linear-gradient(90deg, rgba(109,168,255,0.04), rgba(255,255,255,0.01));padding:12px;border-radius:8px;color:var(--muted);font-size:13px}
+  </style>
 </head>
 <body>
-  <h1>Welkom bij VoidOS!</h1>
+  <div class="wrap" role="main">
+    <header>
+      <div class="logo">V</div>
+      <div>
+        <h1>VoidOS — Documentation</h1>
+        <p class="lead">Design, animation & repo playbook — alles samengebracht.</p>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav aria-label="Docs navigation">
+        <input type="search" id="search" placeholder="Search docs..." oninput="onSearch()" />
+        <a href="#overview" data-target="overview" class="active">Overview</a>
+        <a href="#roadmap" data-target="roadmap">Roadmap</a>
+        <a href="#versions" data-target="versions">Versiegeschiedenis</a>
+        <a href="#design" data-target="design">Design (Figma)</a>
+        <a href="#animations" data-target="animations">Animaties (GSAP)</a>
+        <a href="#development" data-target="development">Development</a>
+        <a href="#components" data-target="components">Component-architectuur</a>
+        <a href="#github" data-target="github">GitHub & repo</a>
+        <a href="#contributing" data-target="contributing">Contributing & License</a>
+      </nav>
+
+      <main id="content" tabindex="0">
+        <!-- Overview -->
+        <section id="overview" class="card section">
+          <h2>Overview</h2>
+          <p class="muted">VoidOS is een conceptueel software- en hardware-ecosysteem: de Void laptop en een cinematics-driven OS-UI. Deze docs bundelen design, development en repo-setup.</p>
+
+          <div style="margin-top:12px" class="spec-grid">
+            <div class="card">
+              <h3 style="margin-top:0">Kernprincipes</h3>
+              <ul>
+                <li>Minimalistisch maar futuristisch</li>
+                <li>Diepe kleurcontrasten, soft-blue accents</li>
+                <li>Cinematische flow & micro-interacties</li>
+                <li>Figma → Cursor → GSAP → GitHub Pages</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3 style="margin-top:0">Project onderdelen</h3>
+              <ul>
+                <li>UI Design (Figma)</li>
+                <li>Animations (GSAP)</li>
+                <li>Web prototype + Recorder integration</li>
+                <li>Docs, repo & automation</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section id="roadmap" class="card section">
+          <h2>Roadmap</h2>
+          <p class="small">Korte roadmap met releases en scope.</p>
+
+          <div style="margin-top:10px">
+            <h3>0.1.x — Foundation</h3>
+            <ul>
+              <li>Repo & docs basis</li>
+              <li>Figma base components</li>
+              <li>GSAP stack + sample timelines</li>
+              <li>Pages showcase</li>
+            </ul>
+
+            <h3>0.2.x — Laptop design</h3>
+            <ul>
+              <li>High-fidelity Void render</li>
+              <li>Keyboard light-wave</li>
+              <li>Logo light-reflect system</li>
+            </ul>
+
+            <h3>0.3.x — OS UI</h3>
+            <ul>
+              <li>Lockscreen & desktop</li>
+              <li>Notification system</li>
+              <li>App windows animaties</li>
+            </ul>
+
+            <h3>1.0.0 — Release</h3>
+            <ul>
+              <li>Public demo</li>
+              <li>Complete docs & changelog</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Versions -->
+        <section id="versions" class="card section">
+          <h2>Versiegeschiedenis</h2>
+          <p class="muted">Elke `.0` major/minor release krijgt een samenvattingsblok met: wat gebouwd is, wat veranderd is, wat verwijderd is, nieuwe capabilities, en next steps.</p>
+
+          <pre><code>v0.1.0 — Initial Structure
+- Repo aangemaakt
+- Docs structuur opgezet
+- Figma basisflow beschreven
+- GSAP setup bepaald
+</code></pre>
+        </section>
+
+        <!-- Design -->
+        <section id="design" class="card section">
+          <h2>Design (Figma)</h2>
+          <p class="small">Figma-structuur, componentregels en prompts die je direct in Figma AI plakt.</p>
+
+          <h3>Figma structuur</h3>
+          <ul>
+            <li>Pagina's: Laptop Hardware, VoidOS UI, Iconography, Animations, Brand Assets</li>
+            <li>Belangrijke layers: <span class="kbd">Casing</span>, <span class="kbd">Screen</span>, <span class="kbd">Keyboard</span>, <span class="kbd">Keys</span>, <span class="kbd">Trackpad</span>, <span class="kbd">Logo</span></li>
+          </ul>
+
+          <h3>UI Guidelines</h3>
+          <p class="muted">Kleur, typografie en notificatie styling.</p>
+          <ul>
+            <li>Primair blauw: <span class="pill">#0A1123</span></li>
+            <li>Accent glow: <span class="pill">#6DA8FF</span></li>
+            <li>Toetsen: zwart <span class="pill">#000000</span></li>
+            <li>Trackpad: donkergrijs <span class="pill">#2E2E2E</span></li>
+            <li>Typografie: Inter / SF Pro</li>
+          </ul>
+
+          <h3>Figma AI Prompt (voorbeeld)</h3>
+          <pre><code>Prompt:
+"VoidOS Laptop — open top-angle view"
+Generate a vector laptop top-angle frame:
+- Casing dark blue #0A1F44
+- Screen bezel + screen rectangle
+- Keyboard base with individual black keys (#000000); each key a separate vector layer named key-ROWx-COLy
+- Trackpad separate rectangle outside the laptop (#2E2E2E)
+- Void logo on lid as 'lamp' white vector
+- Layers: casing, screen, keyboard, keys (group), trackpad, logo
+</code></pre>
+        </section>
+
+        <!-- Animations -->
+        <section id="animations" class="card section">
+          <h2>Animaties (GSAP)</h2>
+          <p class="muted">Stack & best-practice patterns.</p>
+
+          <h3>Plugins</h3>
+          <p class="small">De core-plugins die je moet registreren:</p>
+          <pre><code>import { gsap } from "gsap";
+import { Draggable } from "gsap/Draggable";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+
+gsap.registerPlugin(Draggable, ScrambleTextPlugin, ScrollTrigger, ScrollSmoother);
+</code></pre>
+
+          <h3>Belangrijke animaties</h3>
+          <ul>
+            <li>Logo lamp pulse + micro-parallax</li>
+            <li>Lockscreen → desktop (fade + tilt)</li>
+            <li>Notification slide (15px from top)</li>
+            <li>Keyboard diagonal wave (10ms stagger)</li>
+            <li>Specs bubbles (draw line + fade text)</li>
+          </ul>
+
+          <h3>Recorder integratie</h3>
+          <p class="muted">Start recording → play timeline → timeline onComplete → stopRecording() → download .webm</p>
+          <pre><code>const master = gsap.timeline({ paused: true, onComplete: stopRecording });
+// ... build timelines ...
+await startRecording();
+master.play();
+</code></pre>
+        </section>
+
+        <!-- Development -->
+        <section id="development" class="card section">
+          <h2>Development</h2>
+          <p class="small">Hoe de code en animaties georganiseerd zijn.</p>
+
+          <h3>Folder layout</h3>
+          <pre><code>/
+├── docs/
+├── src/
+│   ├── components/
+│   ├── animations/
+│   ├── assets/
+│   └── styles/
+├── .github/
+└── README.md
+</code></pre>
+
+          <h3>Best practices</h3>
+          <ul>
+            <li>Gebruik ES modules</li>
+            <li>GSAP timelines per feature (voidStart, voidUnlock, voidSpecs)</li>
+            <li>Minimal DOM layout thrash — gebruik transforms & opacity</li>
+            <li>Keys zijn individuele DOM nodes (.key) voor stagger control</li>
+          </ul>
+        </section>
+
+        <!-- Components -->
+        <section id="components" class="card section">
+          <h2>Component-architectuur</h2>
+          <p class="muted">Componenten zijn modulair en kunnen in isolation getest worden.</p>
+
+          <ul>
+            <li><strong>LaptopShell</strong> — casing, bezel, lid</li>
+            <li><strong>KeyboardMatrix</strong> — keys grid (.key)</li>
+            <li><strong>ScreenLayer</strong> — content area for desktop & apps</li>
+            <li><strong>NotificationBubble</strong> — avatar + app-badge + text</li>
+            <li><strong>TouchUnlock</strong> — trackpad indicator</li>
+            <li><strong>SpecsBubble</strong> — marker + auto-draw line + text</li>
+          </ul>
+
+          <div class="note">Tip: keep animations inside `/src/animations` and import them in page-level controllers.</div>
+        </section>
+
+        <!-- GitHub -->
+        <section id="github" class="card section">
+          <h2>GitHub & repo</h2>
+          <p class="muted">Essentiële repo instellingen en policies.</p>
+
+          <h3>Belangrijkste files</h3>
+          <ul>
+            <li>README.md — Projectintro (public)</li>
+            <li>LICENSE — Proprietary / CC BY-NC-ND (afhankelijk van keuze)</li>
+            <li>.github/workflows — build + pages</li>
+            <li>docs/ — deze site</li>
+          </ul>
+
+          <h3>Branch protection (classic)</h3>
+          <ol>
+            <li>Settings → Branches → Add rule</li>
+            <li>Pattern: <span class="kbd">main</span></li>
+            <li>Require status checks, linear history, restrict who can push</li>
+            <li>Restrict pushes to <span class="kbd">@your-username</span> only</li>
+          </ol>
+
+          <h3>Pages</h3>
+          <p class="small">Pages served from <span class="kbd">/docs</span> on branch <span class="kbd">main</span>. Ensure <span class="kbd">docs/index.html</span> exists.</p>
+        </section>
+
+        <!-- Contributing -->
+        <section id="contributing" class="card section">
+          <h2>Contributing & License</h2>
+
+          <p class="muted">VoidOS is a single-maintainer project. Externe bijdragen zijn niet gewenst.</p>
+
+          <h3>CONTRIBUTING.md (kort)</h3>
+          <pre><code># Contributing
+VoidOS is closed for external contributions. Issues and PRs will be closed automatically.
+</code></pre>
+
+          <h3>License</h3>
+          <p class="small">Project license: Proprietary (All rights reserved) or CC BY-NC-ND for non-code assets. See <span class="kbd">/docs/LICENSE.txt</span> in repo.</p>
+        </section>
+
+        <footer>
+          <div class="small">VoidOS Docs — automatisch gegenereerd. Kopieer naar /docs/index.html en push naar main.</div>
+        </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Navigation + hash routing + search
+    const links = document.querySelectorAll('nav a');
+    function setActive(target){
+      links.forEach(a => a.classList.toggle('active', a.dataset.target === target));
+      document.querySelectorAll('main section').forEach(s => s.style.display = (s.id === target ? 'block' : 'none'));
+      location.hash = '#' + target;
+      document.getElementById('content').scrollTop = 0;
+    }
+
+    function onHash(){
+      const t = location.hash.replace('#','') || 'overview';
+      setActive(t);
+    }
+
+    links.forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        setActive(a.dataset.target);
+      });
+    });
+
+    function onSearch(){
+      const q = document.getElementById('search').value.toLowerCase();
+      const sections = document.querySelectorAll('main section');
+      sections.forEach(sec => {
+        const text = sec.innerText.toLowerCase();
+        sec.style.display = text.includes(q) ? 'block' : 'none';
+      });
+      // update nav highlighting: simple approach
+      links.forEach(l => {
+        const target = document.getElementById(l.dataset.target);
+        l.style.display = target && target.style.display !== 'none' ? 'block' : 'none';
+      });
+    }
+
+    // initial
+    document.addEventListener('DOMContentLoaded', () => {
+      // hide all except overview by default
+      document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
+      onHash();
+    });
+
+    window.addEventListener('hashchange', onHash);
+  </script>
 </body>
 </html>
