@@ -1,0 +1,30 @@
+# .github/labeler.yml
+
+documentation:
+  - '**.md'
+  - 'docs/**'
+
+tests:
+  - '**.test.js'
+  - '**.spec.ts'
+  - 'tests/**'
+
+backend:
+  - 'src/server/**'
+  - 'api/**'
+  - 'package.json'
+  - 'yarn.lock'
+  - 'go.mod'
+
+frontend:
+  - 'src/client/**'
+  - 'public/**'
+  - 'assets/**'
+  - 'styles/**'
+  - '**.css'
+  - '**.scss'
+  - '**.jsx'
+  - '**.tsx'
+
+github-actions:
+  - '.github/workflows/**'
